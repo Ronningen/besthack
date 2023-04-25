@@ -1,0 +1,18 @@
+<html>
+<head>
+  <title>Upload File</title> 
+  <meta charset="utf-8">
+</head>
+<body>
+  <center>
+    <h1>Решение команды data squad</h1>
+    <form action="cgi-bin/main.py" method="POST" enctype="multipart/form-data">
+      Загрузите файл с измерениями:
+      <div>
+        <input name="file" type="file" id="parquet_uploads" accept=".parquet">
+        <input name="submit" type="submit" value="получить предсказание">
+      </div>
+    </form>
+  </center>
+</body>
+</html>
