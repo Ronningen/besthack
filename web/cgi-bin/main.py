@@ -7,7 +7,7 @@ import pandas as pd
 
 TESTS_DIR = "./tests"
 SUBMITS_DIR = "./submits"
-MAIN_PAGE = "../"
+MAIN_PAGE = "../main.html"
 
 def load_file():
     print('Content-Type: text/html; charset=UTF-8')
