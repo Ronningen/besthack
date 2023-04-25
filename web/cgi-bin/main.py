@@ -10,26 +10,14 @@ SUBMITS_DIR = "./submits"
 MAIN_PAGE = "../main.html"
 
 def load_file():
-    print('Content-Type: text/html; charset=UTF-8')
-    print()
-    print('''
-        <html>
-        <head>
-        <title>Upload File</title>
-        </head>
-        <body>
-        ''')
-
     form = cgi.FieldStorage()
 
     form_file = form['file']
 
     if not form_file.file:
-        print( '<h1>Not found parameter: file</h1>')
         return pd.DataFrame(), False
 
     if not form_file.filename:
-        print( '<h1>Not found parameter: file</h1>')
         return pd.DataFrame(), False
 
     file_name = os.path.basename(form_file.filename)
@@ -47,12 +35,18 @@ def analyse(test):
     #TODO: link model
     return pd.read_csv(os.path.join(SUBMITS_DIR,"test_submit_example.csv"))
 
+print('Content-Type: text/html; charset=UTF-8')
+print()
+print('<html>')
+print('<head><title>Upload File</title><meta charset="utf-8"></head>')
+print('<body><center>')
+
 cgitb.enable()
 test, loaded = load_file()
 
-print('<center>')
-
-if loaded:   
+if not loaded:   
+    print('<div><label>Файл не был загружен/lable></div>')
+else:
     if test.columns.size == 0 or test[test.columns[0]].count() == 0:
         print('<div><label>Файл пуст</lable></div>')
     else:
