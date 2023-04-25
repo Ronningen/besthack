@@ -38,8 +38,9 @@ def analyse(test):
 print('Content-Type: text/html; charset=UTF-8')
 print()
 print('<html>')
-print('<head><title>Upload File</title><meta charset="utf-8"></head>')
+print('<head><title>semifinal</title><meta charset="utf-8"></head>')
 print('<body><center>')
+print('<h1>Предсказание</h1>')
 
 cgitb.enable()
 test, loaded = load_file()
@@ -53,5 +54,5 @@ else:
         submit = analyse(test)
         print('<div><label>В файле ',test[test.columns[0]].count(),' строк</lable></div>')
 
-print('<div><a href="',MAIN_PAGE,'">Назад</a></div>')
+print('<p><a href="',MAIN_PAGE,'">Назад</a></p>')
 print('</center></body></html>')
