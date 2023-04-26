@@ -14,7 +14,7 @@ git clone https://github.com/Ronningen/besthack
 
 <ins>**2. Run the server:**</ins>
 
-### Linux, MacOS
+#### Linux, MacOS
 
 ```
 cd web
@@ -23,7 +23,7 @@ chmod a+x cgi-bin/download.py
 python3 -m http.server --cgi
 ```
 
-### Windows
+#### Windows
 
 ```
 cd web
