@@ -30,7 +30,7 @@ def load_file():
     return pd.read_parquet(uploaded_file_path), True
 
 def analyse(test):
-    #TODO: link model
+    #TODO: link ML model
     return pd.read_csv("./submits/test_submit_example.csv")
 
 print('Content-Type: text/html; charset=UTF-8')
@@ -38,6 +38,7 @@ print()
 print('''<html>
     <head><title>просмотр результата - data squad</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+    <style> table, th, td {border:1px solid black;}</style>
     <body><center>
         <h1>Предсказание</h1>''')
 
@@ -54,7 +55,20 @@ else:
         submit = analyse(test)
         submit.to_csv(param.SUBMIT_PATH)
 
-        #TODO: print csv
+        headers = submit.columns
+        print('''<div style="overflow-y: auto; max-height: 60%;">
+                 <table><tr>''')
+        for header in headers:
+            print('<th>',header,'</th>')
+        print('</tr>')
+
+        for i, row in submit.iterrows():
+            print('<tr>')
+            for header in headers:
+                print('<td>',row[header],'</td>')
+            print('</tr>')
+        print('</table></div>')
+
 
         print('''<p><a target="_blank" href="download.py"download="submit.csv">
                     <button>Скачать результат</button>
