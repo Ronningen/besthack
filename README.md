@@ -1,6 +1,6 @@
 # besthack
 
-This is a repo for the semifinal of BEST Hack at the Bauman MSTU
+The solution for semifinal of bestHack by data squad team
 
 ***
 
