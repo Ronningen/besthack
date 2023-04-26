@@ -4,10 +4,8 @@
 import cgi, cgitb, os, sys, codecs
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
 import pandas as pd
+import param
 
-TESTS_DIR = "./tests"
-SUBMITS_DIR = "./submits"
-MAIN_PAGE = "../main.html"
 
 def load_file():
     form = cgi.FieldStorage()
@@ -21,7 +19,7 @@ def load_file():
         return pd.DataFrame(), False
 
     file_name = os.path.basename(form_file.filename)
-    uploaded_file_path = os.path.join(TESTS_DIR, file_name)
+    uploaded_file_path = os.path.join(param.TESTS_DIR, file_name)
     with open(uploaded_file_path, 'wb') as fout:
         while True:
             chunk = form_file.file.read(100000)
@@ -33,26 +31,36 @@ def load_file():
 
 def analyse(test):
     #TODO: link model
-    return pd.read_csv(os.path.join(SUBMITS_DIR,"test_submit_example.csv"))
+    return pd.read_csv("./submits/test_submit_example.csv")
 
 print('Content-Type: text/html; charset=UTF-8')
 print()
-print('<html>')
-print('<head><title>semifinal</title><meta charset="utf-8"></head>')
-print('<body><center>')
-print('<h1>Предсказание</h1>')
+print('''<html>
+    <head><title>просмотр результата - data squad</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+    <body><center>
+        <h1>Предсказание</h1>''')
 
 cgitb.enable()
 test, loaded = load_file()
 
 if not loaded:   
-    print('<div><label>Файл не был загружен/lable></div>')
+    print('<div><label>Файл не был загружен</lable></div>')
 else:
-    if test.columns.size == 0 or test[test.columns[0]].count() == 0:
+    if test.empty:
         print('<div><label>Файл пуст</lable></div>')
+
     else:
         submit = analyse(test)
-        print('<div><label>В файле ',test[test.columns[0]].count(),' строк</lable></div>')
+        submit.to_csv(param.SUBMIT_PATH)
 
-print('<p><a href="',MAIN_PAGE,'">Назад</a></p>')
-print('</center></body></html>')
+        #TODO: print csv
+
+        print('''<p><a target="_blank" href="download.py"download="submit.csv">
+                    <button>Скачать результат</button>
+                 </a></p>''')
+
+print(        '''<p><a href="''',param.MAIN_PAGE,'''">
+                    <button>Назад</button>
+                 </a></p>
+    </center></body></html>''')
