@@ -34,12 +34,14 @@ python3 server.py
 
 http://localhost:8000/mainpage.html
 
+***
+
 ## How it should look
 
-**Main page**
+#### Main page
 
 ![Alt text](images/mainpage.png)
 
-**Page with results**
+#### Page with results
 
 ![Alt text](images/resultpage.png)
