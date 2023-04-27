@@ -61,9 +61,6 @@ def analyse(df):
 if not os.path.exists(param.TESTS_DIR):
    os.makedirs(param.TESTS_DIR)
 
-if not os.path.exists(param.SUBMIT_PATH):
-   os.makedirs(param.SUBMIT_PATH)
-
 print('Content-Type: text/html; charset=UTF-8')
 print()
 print('''<html>
