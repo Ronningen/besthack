@@ -1,11 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import cgi, cgitb, os, sys, codecs
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-import pandas as pd
 import param
 
+import cgi, cgitb, os, sys, codecs
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+
+has_modules = True
+no_module = ''
+try:
+    import pandas as pd
+    import joblib 
+except ImportError as e:
+    has_modules = False
+    no_module = e.name
+
+
+PRED_NAME = 'target'
 
 def load_file():
     form = cgi.FieldStorage()
@@ -29,9 +40,21 @@ def load_file():
     
     return pd.read_parquet(uploaded_file_path), True
 
-def analyse(test):
-    #TODO: link ML model
-    return pd.read_csv("./submits/test_submit_example.csv")
+def analyse(df):
+    pca = joblib.load('model/pca.joblib')
+    rf = joblib.load('model/final_model.joblib')
+
+    # в случае Nan будет присвоено предыдущее значение в столбце
+    df.fillna(method='ffill', inplace=True)
+    X_valid = df.iloc[18::19, 2:]
+    
+    X_valid = pca.transform(X_valid)
+
+    y_pred = rf.predict(X_valid)
+    result = df.iloc[18::19, :2]
+    result[PRED_NAME] = y_pred
+
+    return result
 
 print('Content-Type: text/html; charset=UTF-8')
 print()
@@ -42,37 +65,45 @@ print('''<html>
     <body><center>
         <h1>Предсказание</h1>''')
 
-cgitb.enable()
-test, loaded = load_file()
-
-if not loaded:   
-    print('<div><label>Файл не был загружен</lable></div>')
+if not has_modules:
+    print('<div><label>Ошибка: на сервере отсутсвуют пакет',no_module,'</lable></div>')
 else:
-    if test.empty:
-        print('<div><label>Файл пуст</lable></div>')
+    cgitb.enable()
+    test, loaded = load_file()
 
+    if not loaded:   
+        print('<div><label>Файл не был загружен</lable></div>')
     else:
-        submit = analyse(test)
-        submit.to_csv(param.SUBMIT_PATH)
+        if test.empty:
+            print('<div><label>Файл пуст</lable></div>')
 
-        headers = submit.columns
-        print('''<div style="overflow-y: auto; max-height: 60%;">
-                 <table><tr>''')
-        for header in headers:
-            print('<th>',header,'</th>')
-        print('</tr>')
+        else:
+            submit = analyse(test)
+            submit.to_csv(param.SUBMIT_PATH, index=False)
 
-        for i, row in submit.iterrows():
-            print('<tr>')
+            headers = submit.columns
+            print('''<div style="overflow-y: auto; max-height: 60%;">
+                    <table><tr>''')
             for header in headers:
-                print('<td>',row[header],'</td>')
+                print('<th>',header,'</th>')
             print('</tr>')
-        print('</table></div>')
+
+            for i, row in submit.iterrows():
+                print('<tr>')
+                for header in headers:
+                    value = row[header]
+                    if header == PRED_NAME:
+                        value = "{:.1f}".format(value)
+                    else:
+                        value = str(int(value))
+                    print('<td>',value,'</td>')
+                print('</tr>')
+            print('</table></div>')
 
 
-        print('''<p><a target="_blank" href="download.py"download="submit.csv">
-                    <button>Скачать результат</button>
-                 </a></p>''')
+            print('''<p><a target="_blank" href="download.py"download="submit.csv">
+                        <button>Скачать результат</button>
+                    </a></p>''')
 
 print(        '''<p><a href="''',param.MAIN_PAGE,'''">
                     <button>Назад</button>
