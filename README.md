@@ -8,7 +8,7 @@ The solution for semifinal of bestHack by data squad team
 
 <ins>**0. Requirements:**</ins>
 
-This program requires modules `pandas` and `joblib`
+The web scrypt requires python modules `pandas` and `joblib`
 
 <ins>**1. Download the repository:**</ins>
 
