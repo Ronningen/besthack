@@ -8,7 +8,7 @@ The solution for semifinal of bestHack by data squad team
 
 <ins>**0. Requirements:**</ins>
 
-The web scrypt requires python modules `pandas`, `joblib` and `pyarrow`
+The web scrypt requires python modules `pandas`, `joblib` and `pyarrow` or `fastparquet` to decode .parquet files
 
 <ins>**1. Download the repository:**</ins>
 
